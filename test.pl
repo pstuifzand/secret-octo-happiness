@@ -1,13 +1,15 @@
 #!/usr/bin/env perl
 use 5.10.0;
+use lib 'lib';
 use Marpa::R2;
-use PPP;
+use PPP::Parser;
+use PPP::Toplevel;
 use Data::Dumper;
 use Scalar::Util 'blessed';
 
 use Class::Load 'load_class';
 
-my $ppp = PPP->new;
+my $ppp = PPP::Parser->new;
 
 my $ast = $ppp->parse(<<'PPP');
 class Point {
@@ -38,18 +40,14 @@ sub load_classes {
     }
 }
 
+my $toplevel = PPP::Toplevel->new;
+my $scope = $toplevel;
+
 for my $d ($ast->decls) {
-    say $d->keyword->name;
-    say $d->name->name;
-
-    for my $d2 ($d->arguments) {
-        say $d2;
-    }
-
-    for my $d2 ($d->block->decls) {
-        say $d2->name->name;
-    }
-
-    print "\n";
+    my $keyword = $d->keyword->name;
+    my $name    = $d->name->name;
+    $scope->use_keyword($keyword, $name, $d->arguments, $d->block);
 }
+
+$scope->dump_classes;
 

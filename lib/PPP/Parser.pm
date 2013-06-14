@@ -1,4 +1,4 @@
-package PPP;
+package PPP::Parser;
 use 5.10.0;
 use Marpa::R2;
 
