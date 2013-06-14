@@ -56,7 +56,10 @@ sub process_has {
 
     if ($args) {
         for (@$args) {
-            $attr->apply_arg($_);
+            my $method_name = 'process_'.$_->[0];
+            if (my $method = $attr->can($method_name)) {
+                $method->($attr, $self, $_->[1]);
+            }
         }
     }
 
