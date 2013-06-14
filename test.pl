@@ -16,11 +16,12 @@ class Point {
     has $x (is => rw, default => 0);
     has $y (is => rw, default => 0);
 }
-class Point3d (extends => [Point]) {
-    has $z (is => rw, default => 0);
+class Point3d (extends => Point) {
+    has $z (is => rw, default => 100);
 }
-class List {
-    has @a (traits => [Array]);
+class Person {
+    has $name;
+    has $age;
 }
 PPP
 
@@ -46,8 +47,25 @@ my $scope = $toplevel;
 for my $d ($ast->decls) {
     my $keyword = $d->keyword->name;
     my $name    = $d->name->name;
-    $scope->use_keyword($keyword, $name, $d->arguments, $d->block);
+    $scope->process($keyword, $name, $d->arguments->as_list, $d->block);
 }
 
 $scope->dump_classes;
 
+{
+    my $class = $toplevel->find_class('Point');
+    my $object = $class->_new(x => 10, y => 12);
+    print Dumper($object);
+}
+
+{
+    my $class = $toplevel->find_class('Point3d');
+    my $object = $class->_new(x => 10, y => 12);
+    print Dumper($object);
+}
+
+{
+    my $class = $toplevel->find_class('Person');
+    my $object = $class->_new(name => 'Peter', age => 29);
+    print Dumper($object);
+}

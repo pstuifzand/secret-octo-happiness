@@ -13,38 +13,47 @@ sub classes {
     return values %{$self->_classes};
 };
 
-sub use_keyword {
+sub process {
     my ($self, $keyword, $name, $args, $block) = @_;
-    if ($keyword eq 'class') {
-        $self->add_class($name, $args, $block);
-    }
+    my $method = 'process_'.$keyword;
+    $self->$method($name, $args, $block);
     return;
 }
 
 sub add_class {
+    my ($self, $name, $args) = @_;
+    my $c = PPP::Class->new(name => $name);
+    for (@$args) {
+        if ($_->[0] eq 'extends') {
+            ## Deref the name
+            $c->apply_arg([ $_->[0], $self->_classes->{ $_->[1][0] } ]);
+        }
+    }
+    return $c;
+}
+
+sub find_class {
+    my $self = shift;
+    my ($name) = @_;
+    return $self->_classes->{$name};
+}
+
+sub process_class {
     my ($self, $name, $args, $block) = @_;
 
-    my $c = PPP::Class->new(name => $name);
+    my $c = $self->add_class($name, $args);
 
     for my $decl ($block->decls) {
-        $self->use_class_keyword(
-            $c,
+        $c->process(
             $decl->keyword->name,
             $decl->name->name,
-            $decl->arguments,
+            $decl->arguments->as_list,
             $decl->block
         );
     }
-    $self->_classes->{$name} = $c;
-    return;
-}
 
-sub use_class_keyword {
-    my ($self, $class, $keyword, $name, $args, $block) = @_;
-    if ($keyword eq 'has') {
-        my $attr = PPP::Attribute->new(name => $name);
-        $class->add_attribute($attr);
-    }
+    $self->_classes->{$name} = $c;
+
     return;
 }
 
