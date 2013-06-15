@@ -37,8 +37,9 @@ sub apply_arg {
 
     if ($arg->[0] eq 'extends') {
         $self->parent($arg->[1]);
+        no strict 'refs';
+        *{$self->name . '::ISA'} = [$arg->[1]->name];
     }
-
     return;
 }
 

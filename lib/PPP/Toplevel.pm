@@ -22,6 +22,7 @@ sub process {
 
 sub add_class {
     my ($self, $name, $args) = @_;
+    mro::set_mro($name, 'c3');
     my $c = PPP::Class->new(name => $name);
     for (@$args) {
         if ($_->[0] eq 'extends') {

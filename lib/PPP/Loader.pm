@@ -1,4 +1,5 @@
 package PPP::Loader;
+use mro;
 use Moo;
 
 use PPP::Parser;
@@ -16,6 +17,7 @@ sub load {
     my $ast = $ppp->parse($string);
 
     $self->_load_classes($ast);
+    load_class('PPP::Node::args');
 
     my $toplevel = PPP::Toplevel->new;
     my $scope = $toplevel;
