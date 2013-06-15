@@ -55,11 +55,16 @@ sub process_has {
     my $attr = PPP::Attribute->new(name => $name);
 
     if ($args) {
+        my %attrs;
         for (@$args) {
+            $attrs{$_->[0]}=1;
             my $method_name = 'process_'.$_->[0];
             if (my $method = $attr->can($method_name)) {
                 $method->($attr, $self, $_->[1]);
             }
+        }
+        if (!$attrs{is}) {
+            $attr->process_is($self, ['ro']);
         }
     }
 
@@ -82,12 +87,13 @@ sub process_has {
 # In object
 sub _new {
     my $self = shift;
+
     my (%args) = @_;
+
     my $obj = {};
-    for ($self->attributes) {
-        my $arg_name = $_->name;
-        $arg_name =~ s/^\$//;
-        $obj->{$_->name} = $args{$arg_name} // $_->default // 0;
+    for my $attr ($self->attributes) {
+        my $arg_name = $attr->external_name;
+        $obj->{$attr->name} = $args{$arg_name} // $attr->default // 0;
     }
     return bless $obj, $self->name;
 }

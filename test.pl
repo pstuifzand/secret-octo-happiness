@@ -16,7 +16,7 @@ class Point3d (extends => Point) {
     has $z (is => rw, default => 100);
 }
 class Person {
-    has $name;
+    has $name (is=>rw);
     has $age;
 }
 PPP
@@ -24,6 +24,7 @@ PPP
 {
     my $class = $toplevel->find_class('Point');
     my $object = $class->_new(x => 10, y => 12);
+    say $object->x;
     print Dumper($object);
 }
 
@@ -37,4 +38,8 @@ PPP
     my $class = $toplevel->find_class('Person');
     my $object = $class->_new(name => 'Peter', age => 29);
     print Dumper($object);
+    $object->name('Test');
+    print Dumper($object);
+    say $object->age;
 }
+
