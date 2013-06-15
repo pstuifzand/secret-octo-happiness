@@ -25,21 +25,21 @@ PPP
     my $class = $toplevel->find_class('Point');
     my $object = $class->_new(x => 10, y => 12);
     say $object->x;
-    print Dumper($object);
 }
 
 {
     my $class = $toplevel->find_class('Point3d');
     my $object = $class->_new(x => 10, y => 12);
-    print Dumper($object);
+    say $object->z;
 }
 
 {
     my $class = $toplevel->find_class('Person');
     my $object = $class->_new(name => 'Peter', age => 29);
-    print Dumper($object);
     $object->name('Test');
-    print Dumper($object);
-    say $object->age;
+
+    for my $attr ($object->meta->attributes) {
+        say $attr->name;
+    }
 }
 

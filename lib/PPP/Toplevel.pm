@@ -52,6 +52,10 @@ sub process_class {
         );
     }
 
+    $c->process(
+        'has', '$meta', [ ['is', ['ro'] ] ]
+    );
+
     $self->_classes->{$name} = $c;
 
     return;

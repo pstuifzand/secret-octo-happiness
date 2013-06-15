@@ -87,14 +87,13 @@ sub process_has {
 # In object
 sub _new {
     my $self = shift;
-
     my (%args) = @_;
-
     my $obj = {};
     for my $attr ($self->attributes) {
         my $arg_name = $attr->external_name;
         $obj->{$attr->name} = $args{$arg_name} // $attr->default // 0;
     }
+    $obj->{'$meta'} = $self;
     return bless $obj, $self->name;
 }
 
