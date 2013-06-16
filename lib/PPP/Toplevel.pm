@@ -3,6 +3,10 @@ use 5.10.0;
 use Moo;
 use PPP::Class;
 
+with qw/
+    PPP::DoesProcess
+/;
+
 has _classes => (
     is => 'ro',
     default => sub { +{} },
@@ -12,13 +16,6 @@ sub classes {
     my $self = shift;
     return values %{$self->_classes};
 };
-
-sub process {
-    my ($self, $keyword, $name, $args, $block) = @_;
-    my $method = 'process_'.$keyword;
-    $self->$method($name, $args, $block);
-    return;
-}
 
 sub add_class {
     my ($self, $name, $args) = @_;

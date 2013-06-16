@@ -2,6 +2,14 @@ package PPP::Attribute;
 use Moo;
 use Carp;
 
+with qw/
+    PPP::DoesProcess
+/;
+
+has parent => (
+    is => 'ro',
+);
+
 has name => (
     is => 'rw',
 );
@@ -21,16 +29,29 @@ sub _build_external_name {
     return $name;
 }
 
-sub process_default {
-    my ($self, $class, $value) = @_;
+sub apply_arg {
+    my ($self, $name, $value) = @_;
+
+    if (my $method = $self->can('apply_arg_'.$name)) {
+        $self->$method($value);
+    }
+    else {
+        die "Can't apply $name to " . $self->name . " in " . $self->parent->name;
+    }
+    return;
+}
+
+sub apply_arg_default {
+    my ($self, $value) = @_;
     $self->default(ref($value->[0]) eq 'CODE' ? $value->[0]->() : $value->[0]);
     return;
 }
 
-sub process_is {
-    my ($self, $class, $value) = @_;
+sub apply_arg_is {
+    my ($self, $value) = @_;
     $value = $value->[0];
     my $arg_name = $self->external_name;
+    my $class = $self->parent;
 
     if ($value eq 'ro') {
         no strict 'refs';

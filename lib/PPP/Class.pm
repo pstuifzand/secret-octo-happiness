@@ -2,6 +2,10 @@ package PPP::Class;
 use Moo;
 use PPP::Attribute;
 
+with qw/
+    PPP::DoesProcess
+/;
+
 has name => (
     is => 'ro',
 );
@@ -43,29 +47,19 @@ sub apply_arg {
     return;
 }
 
-sub process {
-    my ($self, $keyword, $name, $args, $block) = @_;
-    my $method = 'process_'.$keyword;
-    $self->$method($name, $args, $block);
-    return;
-}
-
 sub process_has {
     my ($self, $name, $args, $block) = @_;
 
-    my $attr = PPP::Attribute->new(name => $name);
+    my $attr = PPP::Attribute->new(parent => $self, name => $name);
 
     if ($args) {
         my %attrs;
         for (@$args) {
-            $attrs{$_->[0]}=1;
-            my $method_name = 'process_'.$_->[0];
-            if (my $method = $attr->can($method_name)) {
-                $method->($attr, $self, $_->[1]);
-            }
+            $attrs{$_->[0]} = 1;
+            $attr->apply_arg($_->[0], $_->[1]);
         }
         if (!$attrs{is}) {
-            $attr->process_is($self, ['ro']);
+            $attr->apply_arg('is', ['ro']);
         }
     }
 
