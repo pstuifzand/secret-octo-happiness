@@ -1,6 +1,9 @@
 package PPP::Node::decl;
 use strict;
 use base 'PPP::Node';
+use PPP::Node::args;
+use PPP::Node::argument;
+use PPP::Node::block;
 
 sub keyword {
     my $self = shift;
