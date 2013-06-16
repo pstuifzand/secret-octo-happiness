@@ -5,9 +5,9 @@ use PPP::Loader;
 my $loader = PPP::Loader->new;
 my $toplevel = $loader->load(<<'PPP');
 class Test000 {
-    has $test1 (is => ro);
-    has $test2 (is => rw);
-    has $test3 (is => rw, default => 1);
+    has test1 (is => ro);
+    has test2 (is => rw);
+    has test3 (is => rw, default => 1);
 }
 PPP
 

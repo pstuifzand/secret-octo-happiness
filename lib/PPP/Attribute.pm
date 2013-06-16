@@ -18,17 +18,6 @@ has default => (
     is => 'rw',
 );
 
-has external_name => (
-    is => 'lazy',
-);
-
-sub _build_external_name {
-    my $self = shift;
-    my $name = $self->name;
-    $name =~ s/^\$//;
-    return $name;
-}
-
 sub apply_arg {
     my ($self, $name, $value) = @_;
 
@@ -50,7 +39,7 @@ sub apply_arg_default {
 sub apply_arg_is {
     my ($self, $value) = @_;
     $value = $value->[0];
-    my $arg_name = $self->external_name;
+    my $arg_name = $self->name;
     my $class = $self->parent;
 
     if ($value eq 'ro') {

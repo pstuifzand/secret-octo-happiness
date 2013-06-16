@@ -5,11 +5,11 @@ use PPP::Loader;
 my $loader = PPP::Loader->new;
 my $toplevel = $loader->load(<<'PPP');
 class Test000 {
-    has $test1 (is => ro);
+    has test1 (is => ro);
 }
 
 class Test001 (extends => Test000) {
-    has $test2 (is => rw);
+    has test2 (is => rw);
 }
 PPP
 

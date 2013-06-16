@@ -85,10 +85,10 @@ sub _new {
     my (%args) = @_;
     my $obj = {};
     for my $attr ($self->attributes) {
-        my $arg_name = $attr->external_name;
+        my $arg_name = $attr->name;
         $obj->{$attr->name} = $args{$arg_name} // $attr->default // 0;
     }
-    $obj->{'$meta'} = $self;
+    $obj->{meta} = $self;
     return bless $obj, $self->name;
 }
 
