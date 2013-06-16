@@ -23,19 +23,19 @@ PPP
 
 {
     my $class = $toplevel->find_class('Point');
-    my $object = $class->_new(x => 10, y => 12);
+    my $object = $class->new(x => 10, y => 12);
     say $object->x;
 }
 
 {
     my $class = $toplevel->find_class('Point3d');
-    my $object = $class->_new(x => 10, y => 12);
+    my $object = $class->new(x => 10, y => 12);
     say $object->z;
 }
 
 {
     my $class = $toplevel->find_class('Person');
-    my $object = $class->_new(name => 'Peter', age => 29);
+    my $object = $class->new(name => 'Peter', age => 29);
     $object->name('Test');
 
     for my $attr ($object->meta->attributes) {

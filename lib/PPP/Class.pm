@@ -79,17 +79,21 @@ sub process_has {
     return;
 }
 
-# In object
-sub _new {
+# In object (UGH)
+around new => sub {
+    my $orig = shift;
     my $self = shift;
-    my (%args) = @_;
-    my $obj = {};
-    for my $attr ($self->attributes) {
-        my $arg_name = $attr->name;
-        $obj->{$attr->name} = $args{$arg_name} // $attr->default // 0;
+    if (ref($self)) {
+        my (%args) = @_;
+        my $obj = {};
+        for my $attr ($self->attributes) {
+            my $arg_name = $attr->name;
+            $obj->{$attr->name} = $args{$arg_name} // $attr->default // 0;
+        }
+        $obj->{meta} = $self;
+        return bless $obj, $self->name;
     }
-    $obj->{meta} = $self;
-    return bless $obj, $self->name;
-}
+    return $orig->($self, @_);
+};
 
 1;
