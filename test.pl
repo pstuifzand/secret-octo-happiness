@@ -9,15 +9,15 @@ my $loader = PPP::Loader->new;
 
 my $toplevel = $loader->load(<<'PPP');
 class Point {
-    has $x (is => rw, default => 0);
-    has $y (is => rw, default => 0);
+    has x (is => rw, default => 0);
+    has y (is => rw, default => 0);
 }
 class Point3d (extends => Point) {
-    has $z (is => rw, default => 100);
+    has z (is => rw, default => 100);
 }
 class Person {
-    has $name (is=>rw);
-    has $age;
+    has name (is=>rw);
+    has age;
 }
 PPP
 
