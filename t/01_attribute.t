@@ -12,7 +12,7 @@ class Test000 {
 PPP
 
 my $class = $toplevel->find_class('Test000');
-my $obj = $class->_new(test1 => 10, test2 => 100);
+my $obj = $class->new(test1 => 10, test2 => 100);
 is($obj->test1, 10);
 is($obj->test2, 100);
 is($obj->test3, 1);
